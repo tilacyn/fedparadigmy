@@ -1,0 +1,2 @@
+# fedparadigmy
+дз
