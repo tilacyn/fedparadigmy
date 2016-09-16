@@ -20,7 +20,7 @@ def linear_merge(lst1, lst2):
             
     if a1>=len(lst1):
             lst.extend(lst2[a2:])
-    if a2>+len(lst2):
+    if a2>=len(lst2):
             lst.extend(lst1[a1:])
             
     return lst
