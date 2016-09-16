@@ -16,9 +16,8 @@ def front_back(a,b ):
 def not_bad(s):
     n=s.find("not")
     b=s.find("bad")
-    if n<b:
+    if n<b and n!=-1 and b!=-1:
         return s[0:n]+"good"+s[b+3:len(s)]
     else:
         return s
 
-     
