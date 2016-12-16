@@ -1,1 +1,3 @@
-Select Country.Name from Country order by SurfaceArea desc limit 5;
+Select Country.Name from Country
+order by SurfaceArea desc, name 
+limit 5;
