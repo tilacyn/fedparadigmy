@@ -1,4 +1,4 @@
-from model import *
+from yat.model import *
 import sys
 from io import StringIO
 import pytest
