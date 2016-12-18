@@ -1,7 +1,8 @@
 from model import *
 import sys
 from io import StringIO
-from unittest.mock import MagicMock
+
+
 #scope tests:
 
 F = Function
