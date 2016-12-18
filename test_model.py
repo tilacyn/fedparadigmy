@@ -41,11 +41,10 @@ class TestScope:
 
 class TestNumber:
 
-
     def test_number(self):
         scope = Scope()
         n = Number(43)
-        assert n.evaluate(scope) is n 
+        assert n.evaluate(scope) is n
 
 
 class TestPrint:
@@ -81,7 +80,7 @@ class TestUnaryOperation:
         monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
         n = Number(43)
-        not_n = UnaryOperation('-',n).evaluate(scope)
+        not_n = UnaryOperation('-', n).evaluate(scope)
         Print(not_n).evaluate(scope)
         assert sys.stdout.getvalue() == '-43\n'
 
@@ -123,23 +122,23 @@ class TestFunction:
     def test_function(self, monkeypatch):
         monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
-        func = Function([],[BO(Number(10), '+', Number(33))])
+        func = Function([], [BO(Number(10), '+', Number(33))])
         res = func.evaluate(scope)
         P(res).evaluate(scope)
         assert sys.stdout.getvalue() == '43\n'
 
     def test_function_many_arguments(self, monkeypatch):
-        monkeypatch.setattr(sys,"stdout", StringIO())
+        monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
         scope["a"] = Number(33)
         scope["b"] = Number(10)
-        func = Function(("a","b"),[BO(Reference("a"), '+', Reference("b"))])
+        func = Function(("a", "b"), [BO(Reference("a"), '+', Reference("b"))])
         res = func.evaluate(scope)
         P(res).evaluate(scope)
         assert sys.stdout.getvalue() == '43\n'
 
     def test_function_big_body(self, monkeypatch):
-        monkeypatch.setattr(sys,"stdout", StringIO())
+        monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
         scope["a"] = Number(33)
         scope["b"] = Number(10)
@@ -158,9 +157,8 @@ class TestFunction:
 class TestFunctionDefiniction:
 
     def test_function_definition_simple(self):
-        #monkeypatch.setattr(sys,"stdout", StringIO())
         scope = Scope()
-        func = Function([],[BO(Number(10), '+', Number(33))])
+        func = Function([], [BO(Number(10), '+', Number(33))])
         func2 = FD("func", func).evaluate(scope)
         assert scope["func"] is func
         assert func2 is func
@@ -189,19 +187,21 @@ class TestConditional:
     def test_conditional_empty(self, monkeypatch):
         monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
-        C(BO(BO(N(3), '%', N(3)), '==', N(0)), [], [Print(N(1))]).evaluate(scope)
-        C(BO(BO(N(3), '%', N(4)), '==', N(0)), [], [Print(N(1))]).evaluate(scope)
+        C(BO(BO(N(3), '%', N(3)),
+             '==', N(0)), [], [Print(N(1))]).evaluate(scope)
+        C(BO(BO(N(3), '%', N(4)),
+             '==', N(0)), [], [Print(N(1))]).evaluate(scope)
         assert sys.stdout.getvalue() == '1\n'
 
     def test_conditional_simple(self, monkeypatch):
-        monkeypatch.setattr(sys,"stdout", StringIO())
+        monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
         C(BO(N(3), '==', N(3)), [P(N(1))], [Print(N(0))]).evaluate(scope)
         C(BO(N(2), '==', N(3)), [P(N(1))], [Print(N(0))]).evaluate(scope)
         assert sys.stdout.getvalue() == '1\n0\n'
 
     def test_conditional_empty2(self, monkeypatch):
-        monkeypatch.setattr(sys,"stdout", StringIO())
+        monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
         C(BO(N(3), '==', N(3)), [P(N(1))], []).evaluate(scope)
         C(BO(N(2), '==', N(3)), [P(N(2))], []).evaluate(scope)
@@ -248,7 +248,7 @@ class TestFunctionCall:
              [Number(6), Number(5)])).evaluate(parent)
         assert sys.stdout.getvalue() == '6\n'
 
-    def test_FunctionCall_with_recursion(self , monkeypatch):
+    def test_FunctionCall_with_recursion(self, monkeypatch):
         monkeypatch.setattr(sys, "stdout", StringIO())
         parent = Scope()
         FD('factorial',
@@ -288,4 +288,3 @@ class TestFunctionCall:
         P(FC(R('strange_max'),
              [Number(6), Number(5)])).evaluate(parent)
         assert sys.stdout.getvalue() == '6\n'
-
