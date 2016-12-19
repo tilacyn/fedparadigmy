@@ -25,29 +25,28 @@ def is_same(number, expected_value, monkeypatch):
 class TestScope:
     def test_scope_simple(self):
         parent = Scope()
-        temp = Number(10)
-        parent["a"] = temp
-        assert parent["a"] is temp
-        temp2 = Number(-2)
-        parent["b"] = temp2
-        assert parent["b"] is temp2
+        numb1 = Number(10)
+        parent["a"] = numb1
+        assert parent["a"] is numb1
+        numb2 = Number(-2)
+        parent["b"] = numb2
+        assert parent["b"] is numb2
 
     def test_scope_take_from_parent(self):
         parent = Scope()
         scope = Scope(parent)
-        temp = Number(10)
-        parent["a"] = temp
-        assert scope["a"] is temp
+        numb = Number(10)
+        parent["a"] = numb
+        assert scope["a"] is numb
 
     def test_scope_have_func(self):
         parent = Scope()
-        temp = Function([], [])
-        parent["f"] = temp
-        assert parent["f"] is temp
+        numb = Function([], [])
+        parent["f"] = numb
+        assert parent["f"] is numb
 
 
 class TestNumber:
-
 
     def test_number(self):
         scope = Scope()
@@ -60,16 +59,23 @@ class TestPrint:
     def test_print_number(self, monkeypatch):
         n = Number(43)
         assert is_same(n, 43, monkeypatch)
-
+    
+    def test_print_evaluate(self, monkeypatch):
+        monkeypatch.setattr(sys, "stdout", StringIO())
+        scope = Scope()
+        res = Print(BO(N(30), "+", N(13))).evaluate(scope)
+        assert is_same(res, 43, monkeypatch)
+        assert sys.stdout.getvalue() == "43\n"
 
 class TestRead:
     def test_read(self, monkeypatch):
         monkeypatch.setattr(sys, "stdin", StringIO('43\n'))
         monkeypatch.setattr(sys, "stdout", StringIO())
         scope = Scope()
-        r = Read('a').evaluate(scope)
+        read_res = Read('a').evaluate(scope)
         Print(R('a')).evaluate(scope)
         assert sys.stdout.getvalue() == "43\n"
+        assert is_same(read_res, 43, monkeypatch)
 
 
 class TestUnaryOperation:
@@ -144,7 +150,7 @@ class TestFunction:
     def test_function_empty_body(self, monkeypatch):
         scope = Scope()
         F(('a'), []).evaluate(scope)
-
+        
 
 class TestFunctionDefiniction:
 
@@ -167,10 +173,10 @@ class TestReference:
 
     def test_reference_function(self, monkeypatch):
         scope = Scope()
-        f = Function([], [])
-        scope["f"] = f
-        f2 = Reference("f").evaluate(scope)
-        assert f is f2
+        func = Function([], [])
+        scope["function"] = func
+        func2 = Reference("function").evaluate(scope)
+        assert func is func2
 
 
 class TestConditional:
